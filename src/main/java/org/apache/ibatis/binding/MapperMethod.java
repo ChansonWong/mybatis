@@ -83,7 +83,9 @@ public class MapperMethod {
         } else if (method.returnsCursor()) {
           result = executeForCursor(sqlSession, args);
         } else {
+          // 封装参数
           Object param = method.convertArgsToSqlCommandParam(args);
+          // 调用SqlSession执行查询（这就是对接口功能的动态代理）
           result = sqlSession.selectOne(command.getName(), param);
           if (method.returnsOptional()
               && (result == null || !method.getReturnType().equals(result.getClass()))) {
@@ -253,12 +255,15 @@ public class MapperMethod {
 
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
+      // 类名 + 方法名
       String statementId = mapperInterface.getName() + "." + methodName;
       if (configuration.hasStatement(statementId)) {
         return configuration.getMappedStatement(statementId);
       } else if (mapperInterface.equals(declaringClass)) {
         return null;
       }
+
+      // 如果mapperInterface是类，mapperInterface.getInterfaces()返回此类所实现的所有接口
       for (Class<?> superInterface : mapperInterface.getInterfaces()) {
         if (declaringClass.isAssignableFrom(superInterface)) {
           MappedStatement ms = resolveMappedStatement(superInterface, methodName,

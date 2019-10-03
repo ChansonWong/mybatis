@@ -77,9 +77,15 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
+      /**
+       * method.getDeclaringClass()返回的是此方法所在的类
+       *
+       * Object.class.equals(method.getDeclaringClass())--就是判断此方法是否来自类（或者是接口 interface）
+       * 如果是类，那么与Object做equals操作返回的是true，如果是接口返回的是false
+       */
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, args);
-      } else if (method.isDefault()) {
+      } else if (method.isDefault()) { // Jdk8新特征，接口允许拥有方法体，使用default修饰
         if (privateLookupInMethod == null) {
           return invokeDefaultMethodJava8(proxy, method, args);
         } else {
@@ -89,11 +95,25 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);
     }
+    /**
+     *  目标既不是类，也不是接口的方法体，执行以下
+     */
+
+    // 以Method对象为Key缓存MapperMethod，先在缓存中找，不存在才new
     final MapperMethod mapperMethod = cachedMapperMethod(method);
     return mapperMethod.execute(sqlSession, args);
   }
 
   private MapperMethod cachedMapperMethod(Method method) {
+    /**
+     * Jdk8特征，相当于
+     *
+     * Object key = map.get("key");
+     * if (key == null) {
+     *     key = new Object();
+     *     map.put("key", key);
+     * }
+     */
     return methodCache.computeIfAbsent(method,
         k -> new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
   }

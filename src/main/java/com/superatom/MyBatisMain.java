@@ -17,6 +17,7 @@ public class MyBatisMain {
     InputStream inputStream = Resources.getResourceAsStream(resource);
     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(inputStream);
     try(SqlSession session = factory.openSession()) {
+      // 动态代理TimeCityMapper
       TimeCityMapper mapper = session.getMapper(TimeCityMapper.class);
       TimeCity timeCity = mapper.selectTimeCity("001e8f6de19d4a6b8b1ba5b89ef6fd54");
       System.out.println(timeCity);

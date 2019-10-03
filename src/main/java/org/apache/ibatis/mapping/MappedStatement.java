@@ -31,30 +31,41 @@ import org.apache.ibatis.session.Configuration;
 /**
  * @author Clinton Begin
  */
+
+/**
+ * 表示XML中的一个SQL
+ */
 public final class MappedStatement {
 
   private String resource;
   private Configuration configuration;
+  // sql的ID
   private String id;
   private Integer fetchSize;
+  // SQL超时时间
   private Integer timeout;
   private StatementType statementType;
   private ResultSetType resultSetType;
+  // 表示解析出来的SQL
   private SqlSource sqlSource;
+  // 缓存
   private Cache cache;
   private ParameterMap parameterMap;
   private List<ResultMap> resultMaps;
   private boolean flushCacheRequired;
   private boolean useCache;
   private boolean resultOrdered;
+  // SQL类型，INSERT/SELECT/DELETE
   private SqlCommandType sqlCommandType;
   private KeyGenerator keyGenerator;
   private String[] keyProperties;
   private String[] keyColumns;
   private boolean hasNestedResultMaps;
+  // 数据库ID，用来区分不同环境
   private String databaseId;
   private Log statementLog;
   private LanguageDriver lang;
+  // 多结果集时
   private String[] resultSets;
 
   MappedStatement() {
