@@ -21,6 +21,11 @@ package org.apache.ibatis.mapping;
  *
  * @author Clinton Begin
  */
+
+/**
+ * 表示从XML文件或者注释读取的映射语句的内容
+ * 它能根据用户传入的参数生成可以在数据库执行的SQL语句（根据参数组装SQL）
+ */
 public interface SqlSource {
 
   BoundSql getBoundSql(Object parameterObject);

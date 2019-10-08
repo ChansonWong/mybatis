@@ -33,6 +33,12 @@ import org.apache.ibatis.session.Configuration;
  *
  * @author Clinton Begin
  */
+
+/**
+ * 类似一个准备进行CRUD操作过程中准备的数据的一个集中点，可以看到这个类并没有做什么操作
+ *
+ *
+ */
 public class BoundSql {
 
   private final String sql;
@@ -42,8 +48,15 @@ public class BoundSql {
   private final MetaObject metaParameters;
 
   public BoundSql(Configuration configuration, String sql, List<ParameterMapping> parameterMappings, Object parameterObject) {
+    // 带？的SQL语句
     this.sql = sql;
+    // 每个入参的属性封装
     this.parameterMappings = parameterMappings;
+    /**
+     * 根据查看源码，如果一个参数以上接口没有指定参数名称，XML的入参摆放呢？
+     *
+     * param1和arg0代表第一个参数，param2和arg1代表第二个参数，以此类推
+     */
     this.parameterObject = parameterObject;
     this.additionalParameters = new HashMap<>();
     this.metaParameters = configuration.newMetaObject(additionalParameters);
