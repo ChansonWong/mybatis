@@ -29,13 +29,19 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
 /**
  * @author Clinton Begin
  */
+
+/**
+ * 元信息对象
+ */
 public class MetaClass {
 
   private final ReflectorFactory reflectorFactory;
   private final Reflector reflector;
 
+  // 私有化了构造方法
   private MetaClass(Class<?> type, ReflectorFactory reflectorFactory) {
     this.reflectorFactory = reflectorFactory;
+    // 根据类型创建 Reflector
     this.reflector = reflectorFactory.findForClass(type);
   }
 
