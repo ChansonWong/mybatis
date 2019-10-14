@@ -82,7 +82,21 @@ public class MetaClass {
      * hasSetter 方法
      */
 
-    // 属性分词器，用于解析属性名，处理较为复杂的属性名
+    /**
+     * 属性分词器，用于解析属性名，处理较为复杂的属性名，那何谓复制属性？比如：
+     *
+     * 数组类型，复合属性
+     *
+     * private class Author {
+     *  private Article[] articles;
+     * }
+     *
+     * private class Article {
+     *  private Author author;
+     * }
+     *
+     * Author属性包含一个Article数组，Article包含一个类型为Author的属性
+     */
     PropertyTokenizer prop = new PropertyTokenizer(name);
     // hasNext 返回 true，则表明 name 是一个复合属性
     if (prop.hasNext()) {
