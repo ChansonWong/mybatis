@@ -35,7 +35,9 @@ import org.apache.ibatis.reflection.property.PropertyTokenizer;
  */
 public class MetaClass {
 
+  // Reflector 的工厂类，兼有缓存 Reflector 对象的功能
   private final ReflectorFactory reflectorFactory;
+  // 反射器，用于解析和存储目标类中的元信息
   private final Reflector reflector;
 
   // 私有化了构造方法
@@ -75,11 +77,21 @@ public class MetaClass {
   }
 
   public Class<?> getSetterType(String name) {
+    /**
+     * MetaClass 中的 hasSetter 方法最终调用了 Reflector 的
+     * hasSetter 方法
+     */
+
+    // 属性分词器，用于解析属性名，处理较为复杂的属性名
     PropertyTokenizer prop = new PropertyTokenizer(name);
+    // hasNext 返回 true，则表明 name 是一个复合属性
     if (prop.hasNext()) {
+      // 为属性创建创建 MetaClass
       MetaClass metaProp = metaClassForProperty(prop.getName());
+      // 再次调用 hasSetter
       return metaProp.getSetterType(prop.getChildren());
     } else {
+      // 调用 reflector 的 hasSetter 方法
       return reflector.getSetterType(prop.getName());
     }
   }
