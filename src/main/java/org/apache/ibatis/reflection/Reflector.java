@@ -15,6 +15,13 @@
  */
 package org.apache.ibatis.reflection;
 
+import org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker;
+import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
+import org.apache.ibatis.reflection.invoker.Invoker;
+import org.apache.ibatis.reflection.invoker.MethodInvoker;
+import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
+import org.apache.ibatis.reflection.property.PropertyNamer;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -33,13 +40,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.ibatis.reflection.invoker.AmbiguousMethodInvoker;
-import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
-import org.apache.ibatis.reflection.invoker.Invoker;
-import org.apache.ibatis.reflection.invoker.MethodInvoker;
-import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
-import org.apache.ibatis.reflection.property.PropertyNamer;
 
 /**
  * This class represents a cached set of class definition information that
@@ -121,7 +121,7 @@ public class Reflector {
      * 1. 获取当前类，接口，以及父类中的所有方法
      * 2. 遍历上一步获取的方法数组，并过滤出以 get 和 is 开头的方法
      * 3. 将方法名转换成相应的属性名
-     * 4. 将属性名和方法对象添加到冲突集合中
+     * 4. 将属性名和方法对象添加到冲突集合中(如果每个key对应的value只有一个值就是不存在冲突)
      * 5. 解决冲突
      */
 
